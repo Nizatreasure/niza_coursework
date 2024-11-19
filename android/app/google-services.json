@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "510580624478",
+    "project_id": "b31dd-coursework",
+    "storage_bucket": "b31dd-coursework.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510580624478:android:342fb25179be12085bf8cf",
+        "android_client_info": {
+          "package_name": "com.b31dd.niza_coursework"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv5Ethtvr0AjVbLz9uwmmBo-WSCCpT0-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
