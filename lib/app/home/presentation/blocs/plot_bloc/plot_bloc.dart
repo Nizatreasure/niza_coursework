@@ -41,7 +41,6 @@ class PlotBloc extends Bloc<PlotEvents, PlotState> {
     emit(state.copyWith(status: SubmittingForm()));
     CustomLoader.showLoader();
     final dataState = await _fetchDataUsecase.execute(params: {
-      'sensor_id': event.sensorID.toLowerCase(),
       'start_date': state.startDate!.millisecondsSinceEpoch ~/ 1000,
       'end_date': state.endDate!.millisecondsSinceEpoch ~/ 1000,
     });

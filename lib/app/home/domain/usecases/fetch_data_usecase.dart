@@ -13,8 +13,6 @@ class FetchDataUsecase
   Future<Either<DataFailure, List<SensorDataModel>>> execute(
       {required Map<String, dynamic> params}) {
     return _homeRepository.fetchData(
-        endDate: params['end_date'],
-        startDate: params['start_date'],
-        sensorID: params['sensor_id']);
+        endDate: params['end_date'], startDate: params['start_date']);
   }
 }

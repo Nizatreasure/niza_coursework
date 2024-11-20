@@ -9,7 +9,7 @@ Widget _buildTemperatureAndHumidityReadings() {
             title: StringManager.currentTemperature,
             otherTitle: StringManager.currentHumidity,
             value:
-                '${state.temperatureData.isEmpty ? '--' : getTempValue(state.temperatureData[state.selectedIndex].last.measure, state.useCelsius)}${state.useCelsius ? StringManager.degreeCelsius : StringManager.degreeFahrenheit}',
+                '${state.temperatureData.isEmpty ? '--' : getTempValue(state.temperatureData.last.measure, state.useCelsius)}${state.useCelsius ? StringManager.degreeCelsius : StringManager.degreeFahrenheit}',
           ),
         ),
         Gap(20.r),
@@ -18,7 +18,7 @@ Widget _buildTemperatureAndHumidityReadings() {
             title: StringManager.currentHumidity,
             otherTitle: StringManager.currentTemperature,
             value:
-                '${state.temperatureData.isEmpty ? '--' : state.humidityData[state.selectedIndex].last.measure}%',
+                '${state.temperatureData.isEmpty ? '--' : state.humidityData.last.measure}%',
           ),
         ),
       ],
@@ -32,7 +32,7 @@ Widget _buildTempBarDisplay(ThemeData themeData) {
       size: Size(300.r, 300.r),
       painter: CustomCirclePainter(
         text:
-            '${state.temperatureData.isEmpty ? '--' : getTempValue(state.temperatureData[state.selectedIndex].last.measure, state.useCelsius)}${state.useCelsius ? StringManager.degreeCelsius : StringManager.degreeFahrenheit}',
+            '${state.temperatureData.isEmpty ? '--' : getTempValue(state.temperatureData.last.measure, state.useCelsius)}${state.useCelsius ? StringManager.degreeCelsius : StringManager.degreeFahrenheit}',
         textStyle: themeData.textTheme.bodyMedium!
             .copyWith(fontSize: FontSizeManager.f48),
         dashColor: ColorManager.blue.withOpacity(0.45),
@@ -46,44 +46,21 @@ Widget _buildTemperatureUnitToggle(ThemeData themeData) {
   return BlocBuilder<HomepageBloc, HomepageState>(builder: (context, state) {
     HomepageBloc bloc = context.read<HomepageBloc>();
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SizedBox(
-          width: 150.r,
-          child: CustomDropDown<String>(
-            items: state.sensors
-                .map((val) => DropdownMenuItem(
-                    value: val,
-                    child: Text(
-                      val.toUpperCase(),
-                      style: themeData.textTheme.bodyMedium,
-                    )))
-                .toList(),
-            value: state.sensors.isEmpty
-                ? null
-                : state.sensors[state.selectedIndex],
-            onChanged: (val) {
-              if (val != null) {
-                bloc.add(HomepageUpdateSelectedSensor(val));
-              }
-            },
-            hintText: StringManager.loading,
-          ),
+        CustomToggleButton(
+          tab1Text: StringManager.degreeCelsius,
+          tab2Text: StringManager.degreeFahrenheit,
+          selectedTab: state.useCelsius
+              ? StringManager.degreeCelsius
+              : StringManager.degreeFahrenheit,
+          onTapTab1: () {
+            bloc.add(const HomepageUpdateTemperatureUnit(true));
+          },
+          onTapTab2: () {
+            bloc.add(const HomepageUpdateTemperatureUnit(false));
+          },
         ),
-        if (state.homePageIndex != 1)
-          CustomToggleButton(
-            tab1Text: StringManager.degreeCelsius,
-            tab2Text: StringManager.degreeFahrenheit,
-            selectedTab: state.useCelsius
-                ? StringManager.degreeCelsius
-                : StringManager.degreeFahrenheit,
-            onTapTab1: () {
-              bloc.add(const HomepageUpdateTemperatureUnit(true));
-            },
-            onTapTab2: () {
-              bloc.add(const HomepageUpdateTemperatureUnit(false));
-            },
-          ),
       ],
     );
   });
@@ -117,7 +94,7 @@ Widget _buildHumidityChart(ThemeData themeData) {
     return Column(
       children: [
         Text(
-          '${StringManager.humidity} (%) ${state.sensors.isEmpty ? '' : state.sensors[state.selectedIndex].toUpperCase()} ',
+          '${StringManager.humidity} (%)',
           style: themeData.textTheme.bodyMedium!
               .copyWith(fontWeight: FontWeight.w600),
         ),
@@ -126,9 +103,7 @@ Widget _buildHumidityChart(ThemeData themeData) {
             return Column(
               children: [
                 CustomChart(
-                  data: state.humidityData.isNotEmpty
-                      ? state.humidityData[state.selectedIndex]
-                      : [],
+                  data: state.humidityData.isNotEmpty ? state.humidityData : [],
                   yAxisMax: 100,
                   yAxisMin: 0,
                   dataID: StringManager.humidity,
@@ -149,7 +124,7 @@ Widget _buildTemperatureChart(ThemeData themeData) {
     return Column(
       children: [
         Text(
-          '${StringManager.temperature} (${StringManager.degreeCelsius}) ${state.sensors.isEmpty ? '' : state.sensors[state.selectedIndex].toUpperCase()} ',
+          '${StringManager.temperature} (${StringManager.degreeCelsius}) ',
           style: themeData.textTheme.bodyMedium!
               .copyWith(fontWeight: FontWeight.w600),
         ),
@@ -159,7 +134,7 @@ Widget _buildTemperatureChart(ThemeData themeData) {
               children: [
                 CustomChart(
                   data: state.temperatureData.isNotEmpty
-                      ? state.temperatureData[state.selectedIndex]
+                      ? state.temperatureData
                       : [],
                   yAxisMax: 50,
                   yAxisMin: -15,
@@ -176,7 +151,7 @@ Widget _buildTemperatureChart(ThemeData themeData) {
   });
 }
 
-Widget _buildSmallScreenGraph(ThemeData themeData) {
+Widget _buildGraph(ThemeData themeData) {
   return BlocBuilder<HomepageBloc, HomepageState>(builder: (context, state) {
     return Column(
       children: [
@@ -191,15 +166,13 @@ Widget _buildSmallScreenGraph(ThemeData themeData) {
         ),
         Gap(20.r),
         Text(
-          '${StringManager.temperature} (${StringManager.degreeCelsius}) ${state.sensors.isEmpty ? '' : state.sensors[state.selectedIndex].toUpperCase()} ',
+          '${StringManager.temperature} (${StringManager.degreeCelsius})',
           style: themeData.textTheme.bodyMedium!
               .copyWith(fontWeight: FontWeight.w600),
         ),
         Gap(20.r),
         CustomChart(
-          data: state.temperatureData.isNotEmpty
-              ? state.temperatureData[state.selectedIndex]
-              : [],
+          data: state.temperatureData.isNotEmpty ? state.temperatureData : [],
           yAxisMax: 50,
           yAxisMin: -15,
           chartAreaWidth: MediaQuery.of(context).size.width - 70.r,
@@ -209,15 +182,13 @@ Widget _buildSmallScreenGraph(ThemeData themeData) {
         ),
         Gap(50.r),
         Text(
-          '${StringManager.humidity} (%) ${state.sensors.isEmpty ? '' : state.sensors[state.selectedIndex].toUpperCase()} ',
+          '${StringManager.humidity} (%) ',
           style: themeData.textTheme.bodyMedium!
               .copyWith(fontWeight: FontWeight.w600),
         ),
         Gap(20.r),
         CustomChart(
-          data: state.humidityData.isNotEmpty
-              ? state.humidityData[state.selectedIndex]
-              : [],
+          data: state.humidityData.isNotEmpty ? state.humidityData : [],
           yAxisMax: 100,
           yAxisMin: 0,
           dataID: StringManager.humidity,

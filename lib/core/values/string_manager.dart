@@ -1,5 +1,5 @@
 class StringManager {
-  static const String appTitle = "IoT Group 7";
+  static const String appTitle = "Niza B31DD";
   static const String login = "Login";
   static const String enterPassword = "Enter password";
   static const String enterEmail = "Enter email address";

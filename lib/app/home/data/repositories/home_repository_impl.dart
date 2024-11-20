@@ -14,14 +14,14 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this._connectionChecker);
 
   @override
-  Future<Either<DataFailure, List<SensorDataModel>>> fetchData(
-      {required int startDate,
-      required int endDate,
-      required String sensorID}) async {
+  Future<Either<DataFailure, List<SensorDataModel>>> fetchData({
+    required int startDate,
+    required int endDate,
+  }) async {
     if (await _connectionChecker.isConnected) {
       try {
         final data = await _dRef
-            .ref(sensorID)
+            .ref()
             .orderByKey()
             .startAt(startDate.toString())
             .endAt(endDate.toString())
@@ -29,8 +29,7 @@ class HomeRepositoryImpl implements HomeRepository {
         List<SensorDataModel> sensorData = <SensorDataModel>[];
         for (DataSnapshot snap in data.children) {
           sensorData.add(SensorDataModel.fromJson(
-              (snap.value as Map).map((k, v) => MapEntry(k.toString(), v)),
-              sensorid: sensorID));
+              (snap.value as Map).map((k, v) => MapEntry(k.toString(), v))));
         }
         return Right(sensorData);
       } catch (e) {

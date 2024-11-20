@@ -1,10 +1,7 @@
 class AppConstants {
   //strings
   static const String fontFamily = "Lato";
-  static const String statusTopic = "b31ot/iot/group7/sensors/readings";
-  static const String topicPrefix = "b31ot/iot/group7/";
-  static const String topicThresholdExceeded =
-      "b31ot/iot/group7/sensors/readings/exceeded";
+  static const String statusTopic = "b31dd/eu3001/weather/data";
 
   //int
   static const int graphTimeInMinutes = 10;

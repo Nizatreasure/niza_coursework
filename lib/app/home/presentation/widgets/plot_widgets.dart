@@ -38,13 +38,12 @@ Future<DateTime?> _getDateTime(BuildContext context) async {
 Widget _buildLargeScreenHistoryPlot(ThemeData themeData) {
   return LayoutBuilder(
     builder: (context, constraints) {
-      return _buildCommonHistoryPlot(themeData, constraints.maxWidth, true);
+      return _buildHistoryPlot(themeData, constraints.maxWidth, true);
     },
   );
 }
 
-Widget _buildCommonHistoryPlot(
-    ThemeData themeData, double width, bool largeScreen) {
+Widget _buildHistoryPlot(ThemeData themeData, double width, bool largeScreen) {
   int maxX = ((width - 70.r) / 40.r).toInt();
 
   return BlocBuilder<PlotBloc, PlotState>(builder: (context, state) {
@@ -169,43 +168,4 @@ Widget _buildCommonHistoryPlot(
           )
         : const SizedBox.shrink();
   });
-}
-
-Widget _buildSensorList(ThemeData themeData, HomepageBloc bloc) {
-  return BlocBuilder<HomepageBloc, HomepageState>(
-      bloc: bloc,
-      builder: (context, state) {
-        return Row(
-          children: [
-            Text(
-              StringManager.sensor,
-              style: themeData.textTheme.bodyMedium!
-                  .copyWith(fontSize: FontSizeManager.f18),
-            ),
-            Gap(10.r),
-            SizedBox(
-              width: 150.r,
-              child: CustomDropDown<String>(
-                items: state.sensors
-                    .map((val) => DropdownMenuItem(
-                        value: val,
-                        child: Text(
-                          val.toUpperCase(),
-                          style: themeData.textTheme.bodyMedium,
-                        )))
-                    .toList(),
-                value: state.sensors.isEmpty
-                    ? null
-                    : state.sensors[state.selectedIndex],
-                onChanged: (val) {
-                  if (val != null) {
-                    bloc.add(HomepageUpdateSelectedSensor(val));
-                  }
-                },
-                hintText: StringManager.loading,
-              ),
-            ),
-          ],
-        );
-      });
 }

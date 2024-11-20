@@ -6,10 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:niza_coursework/di.dart';
+
 import '../../../../core/common/form_submission/form_submission.dart';
 import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/common/widgets/custom_dialog.dart';
-import '../../../../core/common/widgets/custom_dropdown.dart';
 import '../../../../core/common/widgets/custom_input_field.dart';
 import '../../../../core/values/color_manager.dart';
 import '../../../../core/values/font_size_manager.dart';
@@ -37,8 +37,7 @@ class _PlotPageState extends State<PlotPage> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    widget.homepageBloc.add(const HomepageUpdateTabIndex(0));
-    widget.homepageBloc.add(const HomepageUpdateHomepageIndex(0));
+    widget.homepageBloc.add(const HomepageUpdateSelectedTab(0));
     return false;
   }
 
@@ -51,12 +50,11 @@ class _PlotPageState extends State<PlotPage> {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    bool largeScreen = MediaQuery.of(context).size.width >= 1000;
     return BlocProvider<PlotBloc>(
       create: (context) => getIt(),
       child: Scaffold(
         key: _scaffoldKey,
-        drawer: SideTabs(homepageBloc: widget.homepageBloc, smallscreen: true),
+        drawer: AppDrawer(homepageBloc: widget.homepageBloc),
         backgroundColor: themeData.scaffoldBackgroundColor,
         body: Builder(builder: (context) {
           return BlocListener<PlotBloc, PlotState>(
@@ -70,67 +68,43 @@ class _PlotPageState extends State<PlotPage> {
                 );
               }
             },
-            child: _buildBody(largeScreen, themeData, context),
+            child: _buildBody(themeData, context),
           );
         }),
       ),
     );
   }
 
-  Widget _buildBody(
-      bool largeScreen, ThemeData themeData, BuildContext context) {
+  Widget _buildBody(ThemeData themeData, BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(24.r, 30.r, 24.r, 20.r),
-        child: largeScreen
-            ? _buildLargeScreenBody(themeData, context, largeScreen)
-            : _buildCommonBody(themeData, context, largeScreen),
+        child: _buildDisplay(themeData, context),
       ),
     );
   }
 
-  Widget _buildLargeScreenBody(
-      ThemeData themeData, BuildContext context, bool largeScreen) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 3,
-          child: _buildCommonBody(themeData, context, largeScreen),
-        ),
-        VerticalDivider(
-          color: ColorManager.blue.withOpacity(0.3),
-          width: 80.r,
-        ),
-        Expanded(flex: 4, child: _buildLargeScreenHistoryPlot(themeData)),
-      ],
-    );
-  }
-
-  Widget _buildCommonBody(
-      ThemeData themeData, BuildContext context, bool largeScreen) {
+  Widget _buildDisplay(ThemeData themeData, BuildContext context) {
     PlotBloc bloc = context.read<PlotBloc>();
     return Column(
       children: [
         Row(
           children: [
-            if (!largeScreen)
-              GestureDetector(
-                onTap: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-                child: Container(
-                  padding: EdgeInsetsDirectional.only(
-                      end: 20.r, top: 10.r, bottom: 10.r),
-                  child: const Icon(Icons.menu, color: ColorManager.white),
-                ),
+            GestureDetector(
+              onTap: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+              child: Container(
+                padding: EdgeInsetsDirectional.only(
+                    end: 20.r, top: 10.r, bottom: 10.r),
+                child: const Icon(Icons.menu, color: ColorManager.white),
               ),
+            ),
             Text(StringManager.historicalTrend,
                 style: themeData.textTheme.bodyLarge),
           ],
         ),
         Gap(20.r),
-        _buildSensorList(themeData, widget.homepageBloc),
-        Gap(15.r),
         Expanded(
           child: SingleChildScrollView(
             padding: EdgeInsets.zero,
@@ -176,21 +150,17 @@ class _PlotPageState extends State<PlotPage> {
                           text: StringManager.plotData,
                           onTap: state.startDate != null &&
                                   state.endDate != null &&
-                                  homePageState.sensors.isNotEmpty &&
                                   plotBloc.endDateController.text.isNotEmpty &&
                                   plotBloc.startDateController.text.isNotEmpty
                               ? () {
-                                  bloc.add(PlotFetchDataEvent(
-                                      widget.homepageBloc.state.sensors[widget
-                                          .homepageBloc.state.selectedIndex]));
+                                  bloc.add(const PlotFetchDataEvent());
                                 }
                               : null,
                         );
                       });
                     }),
-                if (!largeScreen)
-                  _buildCommonHistoryPlot(
-                      themeData, MediaQuery.of(context).size.width, false),
+                _buildHistoryPlot(
+                    themeData, MediaQuery.of(context).size.width, false),
               ],
             ),
           ),

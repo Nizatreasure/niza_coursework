@@ -16,6 +16,5 @@ class PlotUpdateEndDateEvent extends PlotEvents {
 }
 
 class PlotFetchDataEvent extends PlotEvents {
-  final String sensorID;
-  const PlotFetchDataEvent(this.sensorID);
+  const PlotFetchDataEvent();
 }
