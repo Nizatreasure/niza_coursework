@@ -159,8 +159,7 @@ class _PlotPageState extends State<PlotPage> {
                         );
                       });
                     }),
-                _buildHistoryPlot(
-                    themeData, MediaQuery.of(context).size.width, false),
+                _buildHistoryPlot(themeData, MediaQuery.of(context).size.width),
               ],
             ),
           ),

@@ -24,3 +24,15 @@ String timeAgo(DateTime time) {
     return '$years year${years > 1 ? 's' : ''} ago';
   }
 }
+
+String formatDuration(Duration duration) {
+  if (duration.inSeconds < 60) {
+    return '${duration.inSeconds} sec';
+  } else if (duration.inMinutes < 60) {
+    return '${duration.inMinutes} min';
+  } else {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes % 60;
+    return '$hours hr $minutes min';
+  }
+}

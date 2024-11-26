@@ -35,15 +35,7 @@ Future<DateTime?> _getDateTime(BuildContext context) async {
   return dateTime;
 }
 
-Widget _buildLargeScreenHistoryPlot(ThemeData themeData) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return _buildHistoryPlot(themeData, constraints.maxWidth, true);
-    },
-  );
-}
-
-Widget _buildHistoryPlot(ThemeData themeData, double width, bool largeScreen) {
+Widget _buildHistoryPlot(ThemeData themeData, double width) {
   int maxX = ((width - 70.r) / 40.r).toInt();
 
   return BlocBuilder<PlotBloc, PlotState>(builder: (context, state) {
@@ -61,7 +53,7 @@ Widget _buildHistoryPlot(ThemeData themeData, double width, bool largeScreen) {
                           .copyWith(fontSize: FontSizeManager.f10)),
                   const Spacer(),
                   SizedBox(
-                    width: largeScreen ? 210.r : 180.r,
+                    width: 180.r,
                     child: Row(
                       children: [
                         Container(
@@ -88,7 +80,7 @@ Widget _buildHistoryPlot(ThemeData themeData, double width, bool largeScreen) {
                           .copyWith(fontSize: FontSizeManager.f10)),
                   const Spacer(),
                   SizedBox(
-                    width: largeScreen ? 210.r : 180.r,
+                    width: 180.r,
                     child: Row(
                       children: [
                         Container(
@@ -108,7 +100,7 @@ Widget _buildHistoryPlot(ThemeData themeData, double width, bool largeScreen) {
               ),
               Gap(40.r),
               SizedBox(
-                width: largeScreen ? width : width - 70.r,
+                width: width - 70.r,
                 height: 400.r,
                 child: DChartLineN(
                   allowSliding: true,

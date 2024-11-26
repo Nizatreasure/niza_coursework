@@ -35,5 +35,11 @@ class StringManager {
   static const String updateMinThreshold = "Update minimum threshold";
   static const String updateMaxThreshold = "Update maximum threshold";
   static const String config = "Config";
+  static const String energy = "Energy";
+  static const String energyConsumption = "Energy Consumption";
+  static const String totalEnergyConsumption = "Total Energy Consumption";
+  static const String period = "Period";
+  static const String averageConsumption = "Average Consumption";
+  // static const String enterEmail = "Enter";
   // static const String enterEmail = "Enter";
 }

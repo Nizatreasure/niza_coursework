@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:niza_coursework/app/home/presentation/pages/energy.dart';
 import '../../app/authentication/presentation/pages/login_page.dart';
 import '../../app/home/presentation/blocs/homepage_bloc/homepage_bloc.dart';
 import '../../app/home/presentation/pages/homepage.dart';
@@ -43,6 +44,20 @@ class MyAppRouter {
                   child: bloc == null
                       ? const Scaffold()
                       : PlotPage(homepageBloc: bloc),
+                );
+              },
+            ),
+            GoRoute(
+              name: RouteNames.energy,
+              path: RouteNames.energy,
+              pageBuilder: (context, state) {
+                HomepageBloc? bloc = state.extra is HomepageBloc
+                    ? state.extra as HomepageBloc
+                    : null;
+                return MaterialPage(
+                  child: bloc == null
+                      ? const Scaffold()
+                      : EnergyPage(homepageBloc: bloc),
                 );
               },
             ),

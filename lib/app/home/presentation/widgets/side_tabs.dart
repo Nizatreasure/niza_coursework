@@ -31,20 +31,40 @@ class AppDrawer extends StatelessWidget {
                 _tabs(themeData,
                     title: StringManager.home,
                     selected: state.selectedTab == 0, onTap: () {
-                  if (state.selectedTab == 0) return;
+                  if (state.selectedTab == 0) {
+                    context.pop();
+                    return;
+                  }
                   homepageBloc.add(const HomepageUpdateSelectedTab(0));
-                  context
-                    ..pop()
-                    ..pop();
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                }),
+                _tabs(themeData,
+                    title: StringManager.energy,
+                    selected: state.selectedTab == 1, onTap: () {
+                  if (state.selectedTab == 1) {
+                    context.pop();
+                    return;
+                  }
+                  homepageBloc.add(const HomepageUpdateSelectedTab(1));
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  context.pushNamed(RouteNames.energy, extra: homepageBloc);
                 }),
                 _tabs(themeData,
                     title: StringManager.plot,
-                    selected: state.selectedTab == 1, onTap: () {
-                  if (state.selectedTab == 1) return;
-                  homepageBloc.add(const HomepageUpdateSelectedTab(1));
-                  context
-                    ..pop()
-                    ..pushNamed(RouteNames.plot, extra: homepageBloc);
+                    selected: state.selectedTab == 2, onTap: () {
+                  if (state.selectedTab == 2) {
+                    context.pop();
+                    return;
+                  }
+                  homepageBloc.add(const HomepageUpdateSelectedTab(2));
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  context.pushNamed(RouteNames.plot, extra: homepageBloc);
                 }),
                 _tabs(themeData, title: StringManager.logout, selected: false,
                     onTap: () async {

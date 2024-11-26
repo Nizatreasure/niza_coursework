@@ -90,6 +90,12 @@ class HomepageBloc extends Bloc<HomepageEvents, HomepageState> {
             domain: modifiedHumidityData.length,
             measure: data.humidity,
             other: data.time)),
+      energyData: List.from(state.energyData)
+        ..add(NumericData(
+          domain: state.energyData.length,
+          measure: data.energyConsumed,
+          other: data.time,
+        )),
     ));
   }
 
